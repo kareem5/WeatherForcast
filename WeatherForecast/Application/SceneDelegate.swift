@@ -16,8 +16,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = scene as? UIWindowScene
         
         let navController = UINavigationController()
-//        let coordinator = ShopCoordinator(navigationController: navController, dependencies: DependenciesBuilder())
-//        coordinator.start()
+        let coordinator = WeatherCoordinator(navigationController: navController)
+        coordinator.start()
 
         window?.rootViewController = navController
         window?.makeKeyAndVisible()
