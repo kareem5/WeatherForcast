@@ -21,6 +21,7 @@ class WeatherListViewController: UIViewController {
         self.coordinator = coordinator
         super.init(nibName: "WeatherListViewController", bundle: nil)
         bindUI()
+        viewModel.fetchWeatherForAllLocations()
     }
     
     required init?(coder: NSCoder) {
@@ -37,6 +38,13 @@ class WeatherListViewController: UIViewController {
     }
     
     private func bindUI() {
+        viewModel.onNewsResponse
+            .receive(on: DispatchQueue.main)
+            .sink { _ in
+            } receiveValue: { cities in
+                
+            }
+
 //        viewModel.onViewStateChange
 //            .receive(on: DispatchQueue.main)
 //            .sink { [unowned self] state in

@@ -16,7 +16,10 @@ final class WeatherCoordinator: Coordinator {
     }
     
     func start() {
-        let viewModel = WeatherListViewModel()
+        let weatherRepository = WeatherDataRepository(weatherService: WeatherAPIService())
+        let findLocationUseCase = FindLocationUseCase(weatherRepository: weatherRepository)
+        let getTomorrowWeatherUseCase = GetTomorrowWeatherUseCase(weatherRepository: weatherRepository)
+        let viewModel = WeatherListViewModel(findLocationUseCase: findLocationUseCase, getTomorrowWeatherUseCase: getTomorrowWeatherUseCase)
         let weatherListVC = WeatherListViewController(viewModel: viewModel, coordinator: self)
         navigationController.pushViewController(weatherListVC, animated: false)
     }
