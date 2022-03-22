@@ -38,6 +38,7 @@ final class WeatherListViewModel {
             
             result
             .subscribe(on: queue)
+            .receive(on: queue)
             .collect()
             .sink { completion in
                 if case .failure(let error) = completion {
@@ -55,7 +56,6 @@ final class WeatherListViewModel {
         findLocationUseCase.perform(with: cityName)
             .flatMap({ loc in
                 self.getTomorrowWeatherUseCase.perform(with: loc)
-            })
-            .eraseToAnyPublisher()
+            }).eraseToAnyPublisher()
     }
 }
