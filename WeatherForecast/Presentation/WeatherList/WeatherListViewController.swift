@@ -32,7 +32,8 @@ class WeatherListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        title = "Tomorrow's Weather"
+        navigationController?.navigationBar.prefersLargeTitles = true
         tableView.register(CityWeatherTableViewCell.nib, forCellReuseIdentifier: CityWeatherTableViewCell.reuseIdentifier)
         tableView.rowHeight = 70
         tableView.dataSource = dataSource
@@ -42,7 +43,6 @@ class WeatherListViewController: UITableViewController {
         return UITableViewDiffableDataSource<Int, CityWeather>(tableView: tableView, cellProvider: {tableView, indexPath, city in
             guard let cell = tableView.dequeueReusableCell(withIdentifier: CityWeatherTableViewCell.reuseIdentifier, for: indexPath) as? CityWeatherTableViewCell else { fatalError("Cannot create header view") }
             cell.configure(city: city)
-//            cell.textLabel?.text = "\(city.title!) --- max: \(city.consolidatedWeather?.first?.maxTemp!)"
             return cell
         })
     }

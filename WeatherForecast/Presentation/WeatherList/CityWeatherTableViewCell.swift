@@ -34,4 +34,17 @@ class CityWeatherTableViewCell: UITableViewCell, CellReusable {
         let url = URL(string: weatherUrl)!
         weatherStateImage.setImage(with: url, PlaceHolderImage: UIImage())
     }
+    
+    override func setSelected(_ selected: Bool, animated: Bool) {
+        super.setSelected(selected, animated: animated)
+        if selected{
+            UIView.animate(withDuration: 0.2, animations: {
+                self.transform = CGAffineTransform(scaleX: 0.97, y: 0.97)
+            }, completion: { finished in
+                UIView.animate(withDuration: 0.2) {
+                    self.transform = .identity
+                }
+            })
+        }
+    }
 }
