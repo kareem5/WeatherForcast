@@ -16,6 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window?.windowScene = scene as? UIWindowScene
         
         let navController = UINavigationController()
+        navController.navigationBar.prefersLargeTitles = true
         let coordinator = WeatherCoordinator(navigationController: navController)
         coordinator.start()
 

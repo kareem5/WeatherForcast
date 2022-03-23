@@ -32,8 +32,6 @@ class WeatherListViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        title = "Tomorrow's Weather"
-        navigationController?.navigationBar.prefersLargeTitles = true
         tableView.register(CityWeatherTableViewCell.nib, forCellReuseIdentifier: CityWeatherTableViewCell.reuseIdentifier)
         tableView.rowHeight = 70
         tableView.dataSource = dataSource
@@ -54,7 +52,8 @@ class WeatherListViewController: UITableViewController {
         snapshot.appendItems(cities, toSection: 0)
         DispatchQueue.main.async {
             print("Recieved updateData on thread \(Thread.current)")
-            self.dataSource.apply(snapshot, animatingDifferences: true)
+            self.title = "Tomorrow's Weather"
+            self.dataSource.apply(snapshot, animatingDifferences: false)
         }
     }
     
@@ -65,7 +64,7 @@ class WeatherListViewController: UITableViewController {
                 if case .failure(let error) = completion {
                     print("error: \(error)")
                 }
-            } receiveValue: { cities in
+            } receiveValue: { [unowned self] cities in
                 self.updateData(with: cities)
             }.store(in: &subscriptions)
 
