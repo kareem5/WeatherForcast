@@ -24,5 +24,11 @@ final class WeatherCoordinator: Coordinator {
         navigationController.pushViewController(weatherListVC, animated: false)
     }
     
+    func weatherDetails(with cityWeather: CityWeather) {
+        let viewModel = WeatherDetailsViewModel(cityWeather: cityWeather)
+        let weatherDetailsVC = WeatherDetailsViewController(viewModel: viewModel, coordinator: self)
+        navigationController.pushViewController(weatherDetailsVC, animated: true)
+    }
+    
     
 }

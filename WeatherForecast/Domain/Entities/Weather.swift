@@ -56,16 +56,16 @@ struct ConsolidatedWeather: Codable {
     let applicableDate: String
     let minTemp, maxTemp, theTemp, windSpeed: Double
     let windDirection: Double?
-    let airPressure, humidity: Double?
+    let airPressure, humidity: Double
     let visibility: Double?
     let predictability: Int?
     
-    var minTempInt: Int {
-        return Int(minTemp.rounded())
+    var airPressureKmh: Double {
+        return airPressure * 1.609
     }
     
-    var maxTempInt: Int {
-        return Int(maxTemp.rounded())
+    var visibilityKmh: Double {
+        return visibility ?? 0.0 * 1.609
     }
 
     enum CodingKeys: String, CodingKey {
