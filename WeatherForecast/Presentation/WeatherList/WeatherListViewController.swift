@@ -57,6 +57,16 @@ class WeatherListViewController: UITableViewController {
         }
     }
     
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.isUserInteractionEnabled = false
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+            guard let cityWeather = self.dataSource.itemIdentifier(for: indexPath) else { return }
+            self.coordinator.weatherDetails(with: cityWeather)
+            tableView.isUserInteractionEnabled = true
+        }
+        
+    }
+    
     private func bindUI() {
         viewModel.onNewsResponse
             .receive(on: DispatchQueue.global(qos: .background))

@@ -44,12 +44,10 @@ final class WeatherListViewModel {
                 if case .failure(let error) = completion {
                     print("error: \(error)")
                 }
-            } receiveValue: { result in
+            } receiveValue: { [unowned self] result in
                 print("Recieved cityWeather on thread \(Thread.current)")
-//                print("\(result.)")
                 self.onNewsResponse.send(result)
             }.store(in: &subscriptions)
-
     }
     
     private func findLocation(with cityName: String) -> AnyPublisher<CityWeather, Error> {
