@@ -20,7 +20,7 @@ class FullWeatherDetailsView: UIView {
     
     private let keyAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14.0, weight: .light)]
     private let valueAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 22.0, weight: .bold),
-                           NSAttributedString.Key.foregroundColor: UIColor(named: "yellowColor")!]
+                                   NSAttributedString.Key.foregroundColor: UIColor.yellowColor]
     
     override init(frame: CGRect) {
         super.init(frame: frame)

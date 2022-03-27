@@ -69,7 +69,7 @@ class WeatherDetailsViewController: UIViewController {
         guard let tomorrowWeather = city.tomorrowWeather else { return }
         dateLabel.text = tomorrowWeather.applicableDate
         weatherStateLabel.text = tomorrowWeather.weatherStateName
-        let weatherUrl = "https://www.metaweather.com/static/img/weather/png/64/\(tomorrowWeather.weatherStateAbbr).png"
+        let weatherUrl = "\(WeatherConstants.weatherStateImageUrl.rawValue)\(tomorrowWeather.weatherStateAbbr)\(WeatherConstants.weatherStateImageType.rawValue)"
         let url = URL(string: weatherUrl)!
         print(url.absoluteString)
         weatherStateImage.setImage(with: url, PlaceHolderImage: UIImage())

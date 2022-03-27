@@ -8,20 +8,25 @@
 import UIKit
 import Combine
 
-class WeatherListViewController: UITableViewController {
+class WeatherListViewController: UITableViewController, Alertable {
     
     var coordinator: WeatherCoordinator
 
-    
     private let viewModel: WeatherListViewModel
     private var subscriptions = Set<AnyCancellable>()
     private lazy var dataSource = makeDataSource()
+    private lazy var loadingView: LoadingView = {
+        let loadingView = LoadingView()
+        loadingView.translatesAutoresizingMaskIntoConstraints = false
+        view.addSubview(loadingView)
+        loadingView.attachAnchors(to: (navigationController?.view)!)
+        return loadingView
+    }()
 
     init(viewModel: WeatherListViewModel, coordinator: WeatherCoordinator) {
         self.viewModel = viewModel
         self.coordinator = coordinator
         super.init(style: .plain)
-//        super.init(nibName: "WeatherListViewController", bundle: nil)
         bindUI()
         viewModel.fetchWeatherForAllLocations()
     }
@@ -51,7 +56,6 @@ class WeatherListViewController: UITableViewController {
         snapshot.appendSections([0])
         snapshot.appendItems(cities, toSection: 0)
         DispatchQueue.main.async {
-            print("Recieved updateData on thread \(Thread.current)")
             self.title = "Tomorrow's Weather"
             self.dataSource.apply(snapshot, animatingDifferences: false)
         }
@@ -78,11 +82,27 @@ class WeatherListViewController: UITableViewController {
                 self.updateData(with: cities)
             }.store(in: &subscriptions)
 
-//        viewModel.onViewStateChange
-//            .receive(on: DispatchQueue.main)
-//            .sink { [unowned self] state in
-//                self.render(state)
-//            }.store(in: &subscriptions)
+        viewModel.onViewStateChange
+            .receive(on: DispatchQueue.main)
+            .sink { [unowned self] state in
+                self.render(state)
+            }.store(in: &subscriptions)
     }
+    
+    private func render(_ state: ViewState) {
+        switch state {
+        case .loading:
+//            loadingView.isHidden = false
+            loadingView.show()
+        case .error(let message):
+//            loadingView.isHidden = true
+            loadingView.hide()
+            showAlert(message: message)
+        case .success:
+//            loadingView.isHidden = true
+            loadingView.hide()
+        }
+    }
+
     
 }
