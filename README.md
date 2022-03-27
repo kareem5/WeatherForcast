@@ -26,3 +26,8 @@ No third-party libraries used in the project.
 
 ### Test Cases
 
+* Repository Test cases:
+  1. FindLocationWithSuccess and ReturnsLocation.
+  2. FindLocationWithError and ReturnsFailedFindLocation.
+  3. FetchWeatherWithSuccess and ReturnsCityWeather.
+  4. FetchWeatherWithError and ReturnsFailedFetchWeather.
