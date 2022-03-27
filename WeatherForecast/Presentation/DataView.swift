@@ -47,7 +47,6 @@ class DataView: UIView {
             titleLabel.leadingAnchor.constraint(equalTo: leadingAnchor, constant: 8),
             titleLabel.trailingAnchor.constraint(equalTo: trailingAnchor, constant: 8),
             titleLabel.topAnchor.constraint(equalTo: topAnchor, constant: 8),
-//            titleLabel.heightAnchor.constraint(equalToConstant: 30),
             
             descriptionLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: -2),
             descriptionLabel.leadingAnchor.constraint(equalTo: titleLabel.leadingAnchor),

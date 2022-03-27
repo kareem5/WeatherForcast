@@ -26,14 +26,14 @@ class CityWeatherTableViewCell: UITableViewCell, CellReusable {
         }
         guard let tomorrowWeather = city.tomorrowWeather else { return }
         weatherStateLabel.text = tomorrowWeather.weatherStateName
-        let weatherUrl = "https://www.metaweather.com/static/img/weather/png/64/\(tomorrowWeather.weatherStateAbbr).png"
+        let weatherUrl = "\(WeatherConstants.weatherStateImageUrl.rawValue)\(tomorrowWeather.weatherStateAbbr)\(WeatherConstants.weatherStateImageType.rawValue)"
         let url = URL(string: weatherUrl)!
         print(url.absoluteString)
         weatherStateImage.setImage(with: url, PlaceHolderImage: UIImage())
         
         let keyAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14.0, weight: .light)]
         let valueAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 22.0, weight: .bold),
-                               NSAttributedString.Key.foregroundColor: UIColor(named: "yellowColor")!]
+                               NSAttributedString.Key.foregroundColor: UIColor.yellowColor]
         
         let fullTempString = NSMutableAttributedString()
         fullTempString.append(NSAttributedString(string: "High  ", attributes: keyAttributes))
