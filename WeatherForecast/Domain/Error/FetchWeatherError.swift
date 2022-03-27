@@ -8,6 +8,7 @@
 enum FetchWeatherError: Error {
     case faildFindLocation
     case failedOnMergingWeathers
+    case failedFetchWeather
     
     var message: String {
         switch self {
@@ -15,6 +16,8 @@ enum FetchWeatherError: Error {
             return "Failed find location"
         case .failedOnMergingWeathers:
             return "Failed merging the weathers into a list"
+        case .failedFetchWeather:
+            return "Failed fetching weather for this location"
         }
     }
 }

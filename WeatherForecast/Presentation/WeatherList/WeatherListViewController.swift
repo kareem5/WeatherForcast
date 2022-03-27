@@ -92,14 +92,11 @@ class WeatherListViewController: UITableViewController, Alertable {
     private func render(_ state: ViewState) {
         switch state {
         case .loading:
-//            loadingView.isHidden = false
             loadingView.show()
         case .error(let message):
-//            loadingView.isHidden = true
             loadingView.hide()
             showAlert(message: message)
         case .success:
-//            loadingView.isHidden = true
             loadingView.hide()
         }
     }

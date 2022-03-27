@@ -21,8 +21,11 @@ final class WeatherDataRepository: WeatherRepository {
     
     func findLocation(with locationName: String) -> AnyPublisher<Location, Error> {
         weatherService.findLocation(with: locationName)
-            .compactMap { locations in
-                locations.first(where: { $0.title == locationName})!
-            }.eraseToAnyPublisher()
+            .tryCompactMap({ locations in
+                guard let result = locations.first(where: { $0.title == locationName}) else {
+                    throw FetchWeatherError.faildFindLocation
+                }
+                return result
+            }).eraseToAnyPublisher()
     }
 }
