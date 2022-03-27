@@ -30,8 +30,6 @@ extension WeatherEndpoint: Endpoint {
     var path: String {
         switch self {
         case .fetchWeatherForLocation(let locationId):
-//            let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
-//            let components = Calendar.current.dateComponents([.day, .month, .year], from: tomorrow)
             return "\(locationId)"
         case .findLocation:
             return Constants.findLocationAPI
