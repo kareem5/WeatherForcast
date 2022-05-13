@@ -9,12 +9,12 @@ import Combine
 import Foundation
 
 protocol WeatherAPIServiceInterface {
-    func fetchWeather(with locationId: Int) -> AnyPublisher<CityWeather, Error>
+    func fetchWeather(with locationId: Int) -> AnyPublisher<Weather, Error>
     func findLocation(with locationName: String) -> AnyPublisher<LocationList, Error>
 }
 
 struct WeatherAPIService: APIClient, WeatherAPIServiceInterface {
-    func fetchWeather(with locationId: Int) -> AnyPublisher<CityWeather, Error> {
+    func fetchWeather(with locationId: Int) -> AnyPublisher<Weather, Error> {
         fetch(endpoint: WeatherEndpoint.fetchWeatherForLocation(locationId: locationId))
     }
     

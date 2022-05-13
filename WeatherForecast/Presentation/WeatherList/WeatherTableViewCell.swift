@@ -1,5 +1,5 @@
 //
-//  CityWeatherTableViewCell.swift
+//  WeatherTableViewCell.swift
 //  WeatherForecast
 //
 //  Created by Kareem Ahmed on 22/03/2022.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class CityWeatherTableViewCell: UITableViewCell, CellReusable {
+class WeatherTableViewCell: UITableViewCell, CellReusable {
     
     
     @IBOutlet
@@ -20,15 +20,15 @@ class CityWeatherTableViewCell: UITableViewCell, CellReusable {
     private weak var weatherStateImage: UIImageView!
     
     
-    func configure(city: CityWeather) {
+    func configure(city: Weather) {
         if let cityName = city.title, let countryName = city.country?.title {
             cityNameLabel.text = "\(cityName), \(countryName)"
         }
-        guard let tomorrowWeather = city.tomorrowWeather else { return }
-        weatherStateLabel.text = tomorrowWeather.weatherStateName
-        let weatherUrl = "\(WeatherConstants.weatherStateImageUrl.rawValue)\(tomorrowWeather.weatherStateAbbr)\(WeatherConstants.weatherStateImageType.rawValue)"
+        guard let todayWeather = city.todayWeather else { return }
+        weatherStateLabel.text = todayWeather.weatherStateName
+        let weatherUrl = "\(WeatherConstants.weatherStateImageUrl.rawValue)\(todayWeather.weatherStateAbbr)\(WeatherConstants.weatherStateImageType.rawValue)"
         let url = URL(string: weatherUrl)!
-        print(url.absoluteString)
+//        print(url.absoluteString)
         weatherStateImage.setImage(with: url, PlaceHolderImage: UIImage())
         
         let keyAttributes = [NSAttributedString.Key.font: UIFont.systemFont(ofSize: 14.0, weight: .light)]
@@ -37,9 +37,9 @@ class CityWeatherTableViewCell: UITableViewCell, CellReusable {
         
         let fullTempString = NSMutableAttributedString()
         fullTempString.append(NSAttributedString(string: "High  ", attributes: keyAttributes))
-        fullTempString.append(NSAttributedString(string: "\(tomorrowWeather.maxTemp.roundedInt())º\n", attributes: valueAttributes))
+        fullTempString.append(NSAttributedString(string: "\(todayWeather.maxTemp.roundedInt())º\n", attributes: valueAttributes))
         fullTempString.append(NSAttributedString(string: "Low    ", attributes: keyAttributes))
-        fullTempString.append(NSAttributedString(string: "\(tomorrowWeather.minTemp.roundedInt())º", attributes: valueAttributes))
+        fullTempString.append(NSAttributedString(string: "\(todayWeather.minTemp.roundedInt())º", attributes: valueAttributes))
         
         temperatureLabel.attributedText = fullTempString
     }

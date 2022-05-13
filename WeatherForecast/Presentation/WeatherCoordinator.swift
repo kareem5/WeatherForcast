@@ -16,19 +16,22 @@ final class WeatherCoordinator: Coordinator {
     }
     
     func start() {
-        let weatherRepository = WeatherDataRepository(weatherService: WeatherAPIService())
-        let findLocationUseCase = FindLocationUseCase(weatherRepository: weatherRepository)
-        let getTomorrowWeatherUseCase = GetTomorrowWeatherUseCase(weatherRepository: weatherRepository)
-        let viewModel = WeatherListViewModel(findLocationUseCase: findLocationUseCase, getTomorrowWeatherUseCase: getTomorrowWeatherUseCase)
+        let weatherRepository = WeatherDataRepository(weatherService: WeatherAPIService(), locationStorageService: LocationStorage())
+        let findLocationUseCase = FindLocationsUseCase(weatherRepository: weatherRepository)
+        let getTodayWeatherUseCase = GetTodayWeatherUseCase(weatherRepository: weatherRepository)
+        let saveLocationUseCase = SaveLocationUseCase(weatherRepository: weatherRepository)
+        let getSavedLocationsUseCase = GetSavedLocationsUseCase(weatherRepository: weatherRepository)
+        let deleteLocationUseCase = DeleteLocationUseCase(weatherRepository: weatherRepository)
+        let viewModel = WeatherListViewModel(findLocationUseCase: findLocationUseCase,
+                                             getTodayWeatherUseCase: getTodayWeatherUseCase, saveLocationUseCase: saveLocationUseCase, getSavedLocationsUseCase: getSavedLocationsUseCase, deleteLocationUseCase: deleteLocationUseCase)
         let weatherListVC = WeatherListViewController(viewModel: viewModel, coordinator: self)
         navigationController.pushViewController(weatherListVC, animated: false)
     }
     
-    func weatherDetails(with cityWeather: CityWeather) {
-        let viewModel = WeatherDetailsViewModel(cityWeather: cityWeather)
+    func weatherDetails(with weather: Weather) {
+        let viewModel = WeatherDetailsViewModel(weather: weather)
         let weatherDetailsVC = WeatherDetailsViewController(viewModel: viewModel, coordinator: self)
         navigationController.pushViewController(weatherDetailsVC, animated: true)
     }
-    
     
 }

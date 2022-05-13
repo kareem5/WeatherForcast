@@ -8,7 +8,7 @@
 import Foundation
 
 // MARK: - Location
-struct Location: Codable {
+struct Location: Codable, Hashable {
     let title, locationType: String?
     let woeid: Int
     let lattLong: String?
@@ -18,6 +18,14 @@ struct Location: Codable {
         case locationType = "location_type"
         case woeid
         case lattLong = "latt_long"
+    }
+    
+    static func == (lhs: Location, rhs: Location) -> Bool {
+        return lhs.woeid == rhs.woeid
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(woeid)
     }
 }
 

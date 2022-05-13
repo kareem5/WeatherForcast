@@ -11,15 +11,15 @@ import Combine
 class WeatherAPIServiceMock: WeatherAPIServiceInterface {
     
     var locationList: LocationList?
-    var weathers: [CityWeather]?
+    var weatherList: [Weather]?
     
-    func fetchWeather(with locationId: Int) -> AnyPublisher<CityWeather, Error> {
-        guard let weathers = weathers, let cityWeather = weathers.first(where: { $0.woeid == locationId }) else {
+    func fetchWeather(with locationId: Int) -> AnyPublisher<Weather, Error> {
+        guard let weathers = weatherList, let weather = weathers.first(where: { $0.woeid == locationId }) else {
             return Fail(error: FetchWeatherError.failedFetchWeather)
                 .eraseToAnyPublisher()
         }
         
-        return Just(cityWeather)
+        return Just(weather)
             .setFailureType(to: Error.self)
             .eraseToAnyPublisher()
     }
