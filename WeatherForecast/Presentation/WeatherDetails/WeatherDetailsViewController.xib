@@ -12,6 +12,7 @@
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="WeatherDetailsViewController" customModule="WeatherForecast" customModuleProvider="target">
             <connections>
                 <outlet property="dateLabel" destination="35a-HN-qKn" id="GL5-5W-s0p"/>
+                <outlet property="nextDaysCollectionView" destination="1xH-Bt-DX5" id="FpZ-Gb-heX"/>
                 <outlet property="view" destination="i5M-Pr-FkT" id="sfx-zR-JGt"/>
                 <outlet property="weatherDetailsView" destination="Tid-YZ-wx6" id="VL2-BN-3At"/>
                 <outlet property="weatherStateImage" destination="bn8-gF-djg" id="idw-7u-4hy"/>
@@ -54,15 +55,41 @@
                         <constraint firstAttribute="height" constant="190" id="7HC-dq-Ojf"/>
                     </constraints>
                 </view>
+                <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" bounces="NO" bouncesZoom="NO" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="1xH-Bt-DX5">
+                    <rect key="frame" x="20" y="441" width="374" height="130"/>
+                    <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="130" id="qK9-6S-Dn7"/>
+                    </constraints>
+                    <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" id="1q2-Q1-JRu">
+                        <size key="itemSize" width="128" height="128"/>
+                        <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                        <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                        <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                    </collectionViewFlowLayout>
+                </collectionView>
+                <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="lgA-Gx-Hvw" userLabel="SeparatorView">
+                    <rect key="frame" x="20" y="410.5" width="374" height="0.5"/>
+                    <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    <constraints>
+                        <constraint firstAttribute="height" constant="0.5" id="uFV-1D-Yju"/>
+                    </constraints>
+                </view>
             </subviews>
             <viewLayoutGuide key="safeArea" id="fnl-2z-Ty3"/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
             <constraints>
+                <constraint firstItem="lgA-Gx-Hvw" firstAttribute="top" secondItem="Tid-YZ-wx6" secondAttribute="bottom" constant="20" id="3hV-rS-72E"/>
                 <constraint firstItem="Tid-YZ-wx6" firstAttribute="top" secondItem="BPv-wy-bvG" secondAttribute="bottom" constant="20" id="3kM-rt-MKc"/>
                 <constraint firstItem="Tid-YZ-wx6" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="G3g-GV-KNY"/>
+                <constraint firstItem="1xH-Bt-DX5" firstAttribute="top" secondItem="lgA-Gx-Hvw" secondAttribute="bottom" constant="30" id="Ksb-a2-eHN"/>
                 <constraint firstItem="35a-HN-qKn" firstAttribute="top" secondItem="fnl-2z-Ty3" secondAttribute="top" constant="40" id="S8i-Uw-Cwj"/>
                 <constraint firstItem="35a-HN-qKn" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="Sst-2D-riv"/>
+                <constraint firstItem="1xH-Bt-DX5" firstAttribute="leading" secondItem="fnl-2z-Ty3" secondAttribute="leading" constant="20" id="VXU-Xw-1VV"/>
                 <constraint firstItem="BPv-wy-bvG" firstAttribute="top" secondItem="35a-HN-qKn" secondAttribute="bottom" constant="12" id="ZXH-3P-iNQ"/>
+                <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="1xH-Bt-DX5" secondAttribute="trailing" constant="20" id="cNh-IV-BN6"/>
+                <constraint firstItem="lgA-Gx-Hvw" firstAttribute="trailing" secondItem="Tid-YZ-wx6" secondAttribute="trailing" id="jmG-mz-W9h"/>
+                <constraint firstItem="lgA-Gx-Hvw" firstAttribute="leading" secondItem="Tid-YZ-wx6" secondAttribute="leading" id="m8d-vC-jHd"/>
                 <constraint firstItem="BPv-wy-bvG" firstAttribute="centerX" secondItem="i5M-Pr-FkT" secondAttribute="centerX" id="sSc-oM-OLy"/>
                 <constraint firstItem="fnl-2z-Ty3" firstAttribute="trailing" secondItem="Tid-YZ-wx6" secondAttribute="trailing" constant="20" id="z65-tJ-cnN"/>
             </constraints>

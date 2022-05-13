@@ -9,17 +9,18 @@ import Combine
 
 final class WeatherDetailsViewModel {
     
-    private let cityWeather: CityWeather
+    private let weather: Weather
     
     private var subscriptions = Set<AnyCancellable>()
-    private(set) var cityWeatherSubject = PassthroughSubject<(CityWeather), Never>()
     
-    init(cityWeather: CityWeather) {
-        self.cityWeather = cityWeather
+    private(set) var weatherSubject = PassthroughSubject<(Weather), Never>()
+    
+    init(weather: Weather) {
+        self.weather = weather
     }
     
     func viewDidLoad() {
-        cityWeatherSubject.send(cityWeather)
+        weatherSubject.send(weather)
     }
     
 }

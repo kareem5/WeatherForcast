@@ -19,7 +19,7 @@ class WeatherRepositoryTests: XCTestCase {
     override func setUpWithError() throws {
         // Put setup code here. This method is called before the invocation of each test method in the class.
         weatherApiService = WeatherAPIServiceMock()
-        sut = WeatherDataRepository(weatherService: weatherApiService)
+        sut = WeatherDataRepository(weatherService: weatherApiService, locationStorageService: LocationStorage())
     }
 
     override func tearDownWithError() throws {
@@ -68,10 +68,10 @@ class WeatherRepositoryTests: XCTestCase {
         XCTAssertNil(result)
     }
 
-    func test_FetchWeatherWithSuccess_ReturnsCityWeather() throws {
-        var result: CityWeather?
+    func test_FetchWeatherWithSuccess_ReturnsWeather() throws {
+        var result: Weather?
         var resultError: Error?
-        weatherApiService.weathers = StubWeatherRepositoryResult.cityWeathers
+        weatherApiService.weatherList = StubWeatherRepositoryResult.weatherList
         let expectation = expectation(description: "Fetch Weather With success")
         sut.fetchWeather(with: StubWeatherRepositoryResult.locations[0])
             .sink { completion in
@@ -90,9 +90,9 @@ class WeatherRepositoryTests: XCTestCase {
     }
     
     func test_FetchWeatherWithError_ReturnsFailedFetchWeather() throws {
-        var result: CityWeather?
+        var result: Weather?
         var resultError: Error?
-        weatherApiService.weathers = StubWeatherRepositoryResult.cityWeathers
+        weatherApiService.weatherList = StubWeatherRepositoryResult.weatherList
         let expectation = expectation(description: "Fetch Weather With error failed fetch weather")
         sut.fetchWeather(with: StubWeatherRepositoryResult.locations[3])
             .sink { completion in
@@ -118,10 +118,10 @@ class WeatherRepositoryTests: XCTestCase {
             Location(title: "Madrid", locationType: "City", woeid: 890726, lattLong: nil)
         ]
         
-        static let cityWeathers = [
-            CityWeather(consolidatedWeather: nil, time: nil, sunRise: nil, sunSet: nil, timezoneName: nil, country: locations[0], sources: nil, title: "Gothenburg", locationType: "City", woeid: locations[0].woeid, lattLong: nil, timezone: nil),
-            CityWeather(consolidatedWeather: nil, time: nil, sunRise: nil, sunSet: nil, timezoneName: nil, country: locations[1], sources: nil, title: "London", locationType: "City", woeid: locations[1].woeid, lattLong: nil, timezone: nil),
-            CityWeather(consolidatedWeather: nil, time: nil, sunRise: nil, sunSet: nil, timezoneName: nil, country: locations[2], sources: nil, title: "Gothenburg", locationType: "City", woeid: locations[2].woeid, lattLong: nil, timezone: nil)
+        static let weatherList = [
+            Weather(consolidatedWeather: nil, time: nil, sunRise: nil, sunSet: nil, timezoneName: nil, country: locations[0], sources: nil, title: "Gothenburg", locationType: "City", woeid: locations[0].woeid, lattLong: nil, timezone: nil),
+            Weather(consolidatedWeather: nil, time: nil, sunRise: nil, sunSet: nil, timezoneName: nil, country: locations[1], sources: nil, title: "London", locationType: "City", woeid: locations[1].woeid, lattLong: nil, timezone: nil),
+            Weather(consolidatedWeather: nil, time: nil, sunRise: nil, sunSet: nil, timezoneName: nil, country: locations[2], sources: nil, title: "Gothenburg", locationType: "City", woeid: locations[2].woeid, lattLong: nil, timezone: nil)
         ]
     }
 

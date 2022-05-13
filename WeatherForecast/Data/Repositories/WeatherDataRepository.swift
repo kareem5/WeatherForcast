@@ -10,22 +10,35 @@ import Combine
 
 final class WeatherDataRepository: WeatherRepository {
     private let weatherService: WeatherAPIServiceInterface
+    private let locationStorageService: LocationStorageInterface
     
-    init (weatherService: WeatherAPIServiceInterface) {
+    typealias StoreModel = Location
+    
+    init(weatherService: WeatherAPIServiceInterface,
+          locationStorageService: LocationStorageInterface) {
         self.weatherService = weatherService
+        self.locationStorageService = locationStorageService
     }
 
-    func fetchWeather(with location: Location) -> AnyPublisher<CityWeather, Error> {
+    func fetchWeather(with location: Location) -> AnyPublisher<Weather, Error> {
         weatherService.fetchWeather(with: location.woeid)
     }
     
-    func findLocation(with locationName: String) -> AnyPublisher<Location, Error> {
+    func findLocations(with locationName: String) -> AnyPublisher<LocationList, Error> {
         weatherService.findLocation(with: locationName)
-            .tryCompactMap({ locations in
-                guard let result = locations.first(where: { $0.title == locationName}) else {
-                    throw FetchWeatherError.faildFindLocation
-                }
-                return result
-            }).eraseToAnyPublisher()
+            .eraseToAnyPublisher()
     }
+    
+    func saveLocation(with location: Location) {
+        locationStorageService.add(with: location)
+    }
+    
+    func getSavedLocations() -> LocationList {
+        return locationStorageService.getAll() ?? []
+    }
+    
+    func removeLocation(with locationId: Int) {
+        locationStorageService.remove(with: locationId)
+    }
+    
 }

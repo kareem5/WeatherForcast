@@ -16,51 +16,105 @@ enum ViewState {
 }
 
 final class WeatherListViewModel {
-    private let findLocationUseCase: FindLocationUseCaseInterface
-    private let getTomorrowWeatherUseCase: GetTomorrowWeatherUseCaseInterface
+    private let findLocationUseCase: FindLocationsUseCaseInterface
+    private let getTodayWeatherUseCase: GetTodayWeatherUseCaseInterface
+    private let saveLocationUseCase: SaveLocationUseCaseInterface
+    private let getSavedLocationsUseCase: GetSavedLocationsUseCaseInterface
+    private let deleteLocationUseCase: DeleteLocationUseCaseInterface
 
     private var subscriptions = Set<AnyCancellable>()
     private let queue = DispatchQueue(label: "fetching_locations", attributes: .concurrent)
-    private(set) var onNewsResponse = PassthroughSubject<([CityWeather]), Error>()
-    private(set) var onViewStateChange = CurrentValueSubject<ViewState, Never>(.loading)
+    @Published private(set) var weatherList: [Weather] = []
+    @Published private(set) var locationsResult: LocationList = []
+    @Published private(set) var state: ViewState = .loading
+    @Published var searchText: String = ""
 
     
-    init(findLocationUseCase: FindLocationUseCaseInterface,
-         getTomorrowWeatherUseCase: GetTomorrowWeatherUseCaseInterface) {
+    init(findLocationUseCase: FindLocationsUseCaseInterface,
+         getTodayWeatherUseCase: GetTodayWeatherUseCaseInterface,
+         saveLocationUseCase: SaveLocationUseCaseInterface,
+         getSavedLocationsUseCase: GetSavedLocationsUseCaseInterface,
+         deleteLocationUseCase: DeleteLocationUseCaseInterface) {
         self.findLocationUseCase = findLocationUseCase
-        self.getTomorrowWeatherUseCase = getTomorrowWeatherUseCase
+        self.getTodayWeatherUseCase = getTodayWeatherUseCase
+        self.saveLocationUseCase = saveLocationUseCase
+        self.getSavedLocationsUseCase = getSavedLocationsUseCase
+        self.deleteLocationUseCase = deleteLocationUseCase
+        subscribeSearch()
     }
     
     func fetchWeatherForAllLocations() {
+        let savedLocationsPublishers = getSavedLocationsUseCase.perform()
+            .compactMap{ findLocation(with: $0.title!) }
+        
         let result = Publishers
-            .MergeMany(
-                findLocation(with: "Gothenburg"),
-                findLocation(with: "Stockholm"),
-                findLocation(with: "Mountain View"),
-                findLocation(with: "London"),
-                findLocation(with: "New York"),
-                findLocation(with: "Berlin")
-                )
+            .MergeMany(savedLocationsPublishers)
             
             result
             .subscribe(on: queue)
             .receive(on: queue)
             .collect()
             .sink { [unowned self] completion in
-                if case .failure(let error) = completion {
-                    print("error: \(error)")
-                    self.onViewStateChange.send(.error(message: FetchWeatherError.failedOnMergingWeathers.message))
-                }
+                checkSinkError(completion)
             } receiveValue: { [unowned self] result in
-                self.onNewsResponse.send(result)
-                self.onViewStateChange.send(.success)
+                self.weatherList = result
+                self.state = .success
             }.store(in: &subscriptions)
     }
     
-    private func findLocation(with cityName: String) -> AnyPublisher<CityWeather, Error> {
+    private func findLocation(with cityName: String) -> AnyPublisher<Weather, Error> {
         findLocationUseCase.perform(with: cityName)
-            .flatMap({ [unowned self] loc in
-                self.getTomorrowWeatherUseCase.perform(with: loc)
-            }).eraseToAnyPublisher()
+            .combineLatest(Just(cityName).setFailureType(to: Error.self))
+            .tryCompactMap(getFirstLocation)
+            .flatMap(getTodayWeatherUseCase.perform)
+            .eraseToAnyPublisher()
+    }
+    
+    private func getFirstLocation(locations: LocationList, locationName: String) throws -> Location? {
+        guard let result = locations.first(where: { $0.title == locationName}) else {
+            throw FetchWeatherError.faildFindLocation
+        }
+        return result
+    }
+    
+    private func subscribeSearch() {
+        $searchText
+            .debounce(for: .seconds(0.5), scheduler: DispatchQueue.main)
+            .map { [unowned self] val in
+                self.findLocationUseCase.perform(with: val)
+                    .replaceError(with: [])
+            }.switchToLatest()
+            .assign(to: &$locationsResult)
+    }
+    
+    private func checkSinkError(_ completion: Subscribers.Completion<Error>) {
+        if case .failure(let error) = completion {
+            print("error: \(error)")
+            self.state = .error(message: FetchWeatherError.failedOnMergingWeathers.message)
+        }
+    }
+    
+    func didSelectLocationFromSearchResult(with location: Location) {
+        searchText.removeAll()
+        print("location::::: \(location)")
+        guard !weatherList.contains(where: {
+            $0.woeid == location.woeid
+        }) else { return }
+        
+        getTodayWeatherUseCase.perform(with: location)
+            .sink { [unowned self] completion in
+                checkSinkError(completion)
+            } receiveValue: { weather in
+                self.weatherList.append(weather)
+            }.store(in: &subscriptions)
+        
+        DispatchQueue.global(qos: .background).async {
+            self.saveLocationUseCase.perform(with: location)
+        }
+    }
+    
+    func didDeleteWeather(with weather: Weather) {
+        deleteLocationUseCase.perform(with: weather.woeid)
+        weatherList.removeAll(where: { $0 == weather})
     }
 }

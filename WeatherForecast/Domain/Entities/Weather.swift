@@ -1,5 +1,5 @@
 //
-//  CityWeather.swift
+//  Weather.swift
 //  WeatherForecast
 //
 //  Created by Kareem Ahmed on 13/03/2022.
@@ -7,27 +7,27 @@
 
 import Foundation
 
-// MARK: - CityWeather
-struct CityWeather: Codable, Hashable {
-    let consolidatedWeather: [ConsolidatedWeather]?
+// MARK: - Weather
+struct Weather: Codable, Hashable {
+    let nextDaysWeather: [ConsolidatedWeather]?
     let time, sunRise, sunSet, timezoneName: String?
     let country: Location?
     let sources: [Source]?
     let title, locationType: String?
-    let woeid: Int?
+    let woeid: Int
     let lattLong, timezone: String?
-    var tomorrowWeather: ConsolidatedWeather? {
-        let tomorrow = Calendar.current.date(byAdding: .day, value: 1, to: Date())!
+    var todayWeather: ConsolidatedWeather? {
+        let today = Date()//Calendar.current.date(byAdding: .day, value: 1, to: Date())!
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "yyyy-MM-dd"
-        let tomorrowString = dateFormatter.string(from: tomorrow)
-        guard let weather = consolidatedWeather?.first(where: { $0.applicableDate == tomorrowString}) else { return nil }
+        let todayString = dateFormatter.string(from: today)
+        guard let weather = nextDaysWeather?.first(where: { $0.applicableDate == todayString}) else { return nil }
         
         return weather
     }
 
     enum CodingKeys: String, CodingKey {
-        case consolidatedWeather = "consolidated_weather"
+        case nextDaysWeather = "consolidated_weather"
         case time
         case sunRise = "sun_rise"
         case sunSet = "sun_set"
@@ -40,7 +40,7 @@ struct CityWeather: Codable, Hashable {
         case timezone
     }
     
-    static func == (lhs: CityWeather, rhs: CityWeather) -> Bool {
+    static func == (lhs: Weather, rhs: Weather) -> Bool {
         return lhs.woeid == rhs.woeid
     }
     
@@ -50,7 +50,7 @@ struct CityWeather: Codable, Hashable {
 }
 
 // MARK: - ConsolidatedWeather
-struct ConsolidatedWeather: Codable {
+struct ConsolidatedWeather: Codable, Hashable {
     let id: Int?
     let weatherStateName, weatherStateAbbr, windDirectionCompass, created: String
     let applicableDate: String
@@ -82,6 +82,10 @@ struct ConsolidatedWeather: Codable {
         case windDirection = "wind_direction"
         case airPressure = "air_pressure"
         case humidity, visibility, predictability
+    }
+    
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(id)
     }
 }
 
